@@ -1,0 +1,6 @@
+name: VLands
+version: '${project.version}'
+main: me.vlink102.vlands.network.VLands
+api-version: '1.20'
+load: POSTWORLD
+depend: [PlaceholderAPI, AquaCore]
