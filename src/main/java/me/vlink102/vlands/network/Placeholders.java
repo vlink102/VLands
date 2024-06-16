@@ -1,14 +1,12 @@
 package me.vlink102.vlands.network;
 
 import me.activated.core.plugin.AquaCoreAPI;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.expansion.Relational;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.WeatherType;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.codehaus.plexus.util.StringUtils;
@@ -17,15 +15,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Placeholders extends PlaceholderExpansion implements Relational {
     private VLands plugin;
     private final AquaCoreAPI aquaCoreAPI;
+
+    private static final String SECTION = "§";
 
     public Placeholders(VLands plugin) {
         this.aquaCoreAPI = plugin.getAquaCoreAPI();
@@ -66,6 +63,40 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
         List<String> paramArray = Arrays.asList(params.split("_"));
         switch (getParameter(paramArray, 0)) {
+            case "plugin" -> {
+                return switch (getParameter(paramArray, 1)) {
+                    case "nopermission" -> SECTION + "cYou have insufficient permissions.";
+                    case "onlyplayers" -> SECTION + "cThis command cannot be run via the console.";
+                    case "configreload" -> SECTION + "aConfiguration successfully reloaded!";
+                    case "failedreload" -> SECTION + "cConfiguration reload failed!";
+                    case "failedreloadfile" -> SECTION + "cConfiguration reload failed! File: " + getStringAfter(paramArray, 1).replaceAll("&", SECTION);
+                    case "failedreloadfileraw" -> SECTION + "cConfiguration reload failed! File: ";
+                    case "offlineplayer" -> SECTION + "cThat player is currently offline.";
+                    case "invalidplayer" -> SECTION + "cCould not find player.";
+                    case "invalidtime" -> SECTION + "cPlease enter a valid time duration.";
+                    case "invaliditem" -> SECTION + "cYou are not holding a valid item";
+                    case "invalidworld" -> SECTION + "cPlease enter a valid world";
+                    case "invalidlocation" -> SECTION + "cPlease enter a valid location";
+                    case "unknowncommand" -> SECTION + "fUnknown command. Type \"/help\" for help.";
+                    case "usage" -> SECTION + "cUsage: " + getStringAfter(paramArray, 1).replaceAll("&", SECTION);
+                    case "invalidplayername" -> {
+                        String name = getStringAfter(paramArray, 1);
+                        if (name.startsWith("{") && name.endsWith("}")) {
+                            String parsed = PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(player.getUniqueId()), name.replaceAll("[{}]", "%"));
+
+                            yield SECTION + "cCould not find player named '" + parsed + "'";
+                        }
+                        yield SECTION + "cCould not find player name '" + getStringAfter(paramArray, 1).replaceAll("&", SECTION) + "'";
+
+                    }
+                    case "invalidplayernameraw" -> SECTION + "cCould not find player with name: " + getStringAfter(paramArray, 1).replaceAll("&", SECTION);
+                    case "invalidplayernamerawplayer" -> SECTION + "cCould not find player with name: ";
+                    case "invalidnumber" -> SECTION + "cPlease enter a valid number";
+                    case "helpline" -> SECTION + "b" + "  " + getStringAfter(paramArray, 1).replaceAll("&", SECTION);
+                    case "adminhelpline" -> SECTION + "3" + "  " + getStringAfter(paramArray, 1).replaceAll("&", SECTION);
+                    default -> null;
+                };
+            }
             case "util" -> {
                 switch (getParameter(paramArray, 1)) {
                     case "math" -> {
@@ -115,11 +146,11 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
                         switch (getParameter(paramArray, 2)) {
                             case "center" -> {
                                 String toCenter = getStringAfter(paramArray, 2);
-                                return getCenteredMessage(toCenter);
+                                return getCenteredMessage(toCenter).replaceAll("&", "§");
                             }
                             case "centerfix" -> {
                                 String toCenter = getStringAfter(paramArray, 2);
-                                return getFixedCenteredMessage(toCenter);
+                                return getFixedCenteredMessage(toCenter).replaceAll("&", "§");
                             }
                             case "blank" -> {
                                 return "\n";
@@ -236,7 +267,7 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
                         return new BigDecimal(TimeUnit.MILLISECONDS.convert(world.getFullTime() * 50L, TimeUnit.SECONDS) % 86400).setScale(0, RoundingMode.HALF_UP).toPlainString();
                     }
                     case "weather" -> {
-                        return StringUtils.capitaliseAllWords(getWeather(onlinePlayer).toString());
+                        return toReadable(getWeather(onlinePlayer).toString());
                     }
                     case "clearduration" -> {
                         return formatTime(TimeUnit.MILLISECONDS.convert(world.getClearWeatherDuration() * 50L, TimeUnit.SECONDS));
@@ -251,12 +282,10 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
                         return getWeather(onlinePlayer).getPretty();
                     }
                     case "temperature" -> {
-                        // todo rounding
-                        return String.valueOf(convertTemperature(world.getBlockAt(onlinePlayer.getLocation()).getTemperature()));
+                        return BigDecimal.valueOf(convertTemperature(world.getBlockAt(onlinePlayer.getLocation()).getTemperature())).toPlainString();
                     }
                     case "humidity" -> {
-                        // todo rounding
-                        return String.valueOf(convertHumidity(world.getBlockAt(onlinePlayer.getLocation()).getHumidity()));
+                        return BigDecimal.valueOf(convertHumidity(world.getBlockAt(onlinePlayer.getLocation()).getHumidity())).toPlainString();
                     }
                     case "biome" -> {
                         // todo capitalisation
@@ -298,7 +327,7 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
                             case CHERRY_GROVE -> 'd';
                             case CUSTOM -> 'k';
                         };
-                        return Component.text("§" + color + world.getBiome(onlinePlayer.getLocation())).content();
+                        return toReadable("§" + color + world.getBiome(onlinePlayer.getLocation()));
                     }
                     case "dimension" -> {
                         switch (world.getEnvironment()) {
@@ -320,11 +349,10 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
         return null;
     }
 
-
     public static String niceBoolean(Boolean b, boolean icon) {
         if (b == null) return "§7Unknown";
         // todo colors
-        return b ? icon ? "&a✔" : "&aYes" : icon ? "&c✖" : "&cNo";
+        return b ? icon ? "§a✔" : "§aYes" : icon ? "§c✖" : "§cNo";
     }
 
     public static String formatIntoMMSS(int secs) {
@@ -354,6 +382,12 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
         }
     }
 
+    public String toReadable(String string) {
+        string = string.toLowerCase();
+        string = string.replace("_", " ");
+        return StringUtils.capitaliseAllWords(string);
+    }
+
     public double convertTemperature(double minecraftTemperature) {
         return (15.66 * minecraftTemperature);
     }
@@ -379,10 +413,10 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
 
     public enum Weather {
         // todo colors
-        RAIN("&b☔"),
-        SNOW("&f☃"),
-        THUNDER("&e⚡"),
-        CLEAR("&e☀");
+        RAIN("§b☔"),
+        SNOW("§f☃"),
+        THUNDER("§e⚡"),
+        CLEAR("§e☀");
 
         private final String pretty;
 
@@ -415,51 +449,51 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
     }
 
     public String getStringAfter(List<String> paramArray, int depth) {
-        if (depth > 0) {
-            paramArray.subList(0, depth).clear();
+        List<String> paramArray2 = new ArrayList<>(paramArray);
+        for (int i = 0; i < depth + 1; i++) {
+            paramArray2.remove(0);
         }
-        return String.valueOf(paramArray);
+        return String.valueOf(paramArray2).replace("[", "").replace("]", "");
     }
 
     private final static int CENTER_PX = 154;
 
     public static String getFixedCenteredMessage(String message) {
-        return getCenteredMessage(message.trim());
+        return getCenteredMessage(message);
     }
 
-    public static String getCenteredMessage(String message){
-        String[] lines = LegacyComponentSerializer.legacyAmpersand().serialize(Component.text(message)).split("\n", 40);
-        StringBuilder returnMessage = new StringBuilder();
-
-
-        for (String line : lines) {
-            int messagePxSize = 0;
-            boolean previousCode = false;
-            boolean isBold = false;
-
-            for (char c : line.toCharArray()) {
-                if (c == '\u00a7') {
-                    previousCode = true;
-                } else if (previousCode) {
-                    previousCode = false;
-                    isBold = c == 'l';
-                } else {
-                    DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
-                    messagePxSize = isBold ? messagePxSize + dFI.getBoldLength() : messagePxSize + dFI.getLength();
-                    messagePxSize++;
-                }
-            }
-            int toCompensate = CENTER_PX - messagePxSize / 2;
-            int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
-            int compensated = 0;
-            StringBuilder sb = new StringBuilder();
-            while(compensated < toCompensate){
-                sb.append(" ");
-                compensated += spaceLength;
-            }
-            returnMessage.append(sb).append(line).append("\n");
+    public static String getCenteredMessage(String message) {
+        if(message == null || message.equals("")) {
+            return "";
         }
+        message = LegacyComponentSerializer.legacySection().serialize(Component.text(message));
 
-        return returnMessage.toString();
+        int messagePxSize = 0;
+        boolean previousCode = false;
+        boolean isBold = false;
+
+        for(char c : message.toCharArray()){
+            if(c == '§'){
+                previousCode = true;
+            }else if(previousCode){
+                previousCode = false;
+                isBold = c == 'l' || c == 'L';
+            }else{
+                DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
+                messagePxSize++;
+            }
+        }
+        int CENTER_PX = 154;
+        int halvedMessageSize = messagePxSize / 2;
+        int toCompensate = CENTER_PX - halvedMessageSize;
+        int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
+        int compensated = 0;
+        StringBuilder sb = new StringBuilder();
+        while(compensated < toCompensate){
+            sb.append(" ");
+            compensated += spaceLength;
+        }
+        return sb + message;
     }
 }
