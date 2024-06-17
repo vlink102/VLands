@@ -61,6 +61,7 @@ public class Tab extends Command {
             ).setDescription("Lists the available properties")
             .build();
 
+    /*
     private static final CommandObject nametagPreview = new CommandObject.Builder("btab")
             .addParameter(
                     new CommandParameter.Builder()
@@ -75,6 +76,8 @@ public class Tab extends Command {
                             ).build()
             ).setDescription("Shows your nametag for yourself")
             .build();
+
+     */
 
     private static final CommandObject announceBar = new CommandObject.Builder("btab")
             .addParameter(
@@ -101,7 +104,7 @@ public class Tab extends Command {
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
                                     new CommandParameterType.Builder("seconds")
-                                            .setDataType(CommandParameterType.DataType.INTEGER)
+                                            .setDataType(Integer.class)
                                             .build()
                             ).build()
             )
@@ -183,6 +186,6 @@ public class Tab extends Command {
 
 
     public Tab() {
-        super(new Tab.Builder("&e&lTABLIST").addCommandObjects(reload, propertyChange, cpu, clearData, nametagPreview, debug, parse, announceBar, listProperties));
+        super(new Tab.Builder("Tablist").addCommandObjects(reload, propertyChange, cpu, clearData, /*nametagPreview, */debug, parse, announceBar, listProperties));
     }
 }

@@ -2,9 +2,7 @@ package me.vlink102.vlands.network;
 
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class CommandObject {
     private final List<CommandParameter> parameters;
@@ -17,6 +15,14 @@ public class CommandObject {
         this.permission = builder.permission;
         this.prefix = builder.prefix;
         this.description = builder.description;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void addParameter(CommandParameter parameter) {
@@ -39,8 +45,8 @@ public class CommandObject {
         return permission;
     }
 
-    public boolean canViewParameter(Player player) {
-        if (permission == null) return true;
+    public boolean canViewParameterCluster(Player player) {
+        if (Objects.equals(permission, "")) return true;
         return (player.hasPermission(permission));
     }
 
@@ -50,17 +56,11 @@ public class CommandObject {
         private String prefix;
         private String description;
 
-        public Builder() {
-            this.parameters = new ArrayList<>();
-            this.permission = null;
-            this.description = null;
-        }
-
         public Builder(String prefix) {
             this.prefix = prefix;
             this.parameters = new ArrayList<>();
-            this.permission = null;
-            this.description = null;
+            this.permission = "";
+            this.description = "";
         }
 
         public Builder setDescription(String description) {

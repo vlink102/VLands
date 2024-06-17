@@ -4,3 +4,29 @@ main: me.vlink102.vlands.network.VLands
 api-version: '1.20'
 load: POSTWORLD
 depend: [PlaceholderAPI, AquaCore]
+commands:
+  vccb:
+    description: "Chat callback command (hidden)"
+    usage: /<command>
+    aliases:
+      - vlandschatcallback
+      - callback
+      - vcb
+  help:
+    description: "Help for the vlands network"
+    usage: /help <section>
+    aliases:
+      - help
+      - '?'
+      - helpme
+      - test
+      - wtf
+      - hello
+      - pl
+      - pomoc
+      - vlandshelp
+      - vhelp
+      - ineedhelp
+      - plshelp
+      - bruh
+      - idkwhattodo

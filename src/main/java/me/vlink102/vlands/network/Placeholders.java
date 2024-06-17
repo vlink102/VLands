@@ -5,6 +5,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.expansion.Relational;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -382,7 +383,7 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
         }
     }
 
-    public String toReadable(String string) {
+    public static String toReadable(String string) {
         string = string.toLowerCase();
         string = string.replace("_", " ");
         return StringUtils.capitaliseAllWords(string);
@@ -460,6 +461,41 @@ public class Placeholders extends PlaceholderExpansion implements Relational {
 
     public static String getFixedCenteredMessage(String message) {
         return getCenteredMessage(message);
+    }
+
+    public static String getCenteredMessage(TextComponent component) {
+        if(component == null || component.content().isEmpty()) {
+            return "";
+        }
+        String message = LegacyComponentSerializer.legacySection().serialize(component);
+
+        int messagePxSize = 0;
+        boolean previousCode = false;
+        boolean isBold = false;
+
+        for(char c : message.toCharArray()){
+            if(c == '§'){
+                previousCode = true;
+            }else if(previousCode){
+                previousCode = false;
+                isBold = c == 'l' || c == 'L';
+            }else{
+                DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
+                messagePxSize++;
+            }
+        }
+        int CENTER_PX = 154;
+        int halvedMessageSize = messagePxSize / 2;
+        int toCompensate = CENTER_PX - halvedMessageSize;
+        int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
+        int compensated = 0;
+        StringBuilder sb = new StringBuilder();
+        while(compensated < toCompensate){
+            sb.append(" ");
+            compensated += spaceLength;
+        }
+        return sb + message;
     }
 
     public static String getCenteredMessage(String message) {

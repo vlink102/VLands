@@ -1,34 +1,34 @@
 package me.vlink102.vlands.network;
 
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
+
+import java.util.Objects;
 
 public class CommandParameterType {
     private final String parameterName; // <parameterName>
     private final boolean isTrailingParameter; // <parameterName...>
-    private final DataType dataType; // String
+    private final Class<?> dataType; // String
     private final String hoverMessage; // "Hello"
     private final String parameterPermission;
 
-    public enum DataType {
-        STRING("String"), // "ZenmosM"
-        INTEGER("Integer"), // 102
-        DOUBLE("Decimal"), // 0.03d
-        BOOLEAN("Boolean"), // true
-        ENUM("Enumerator"), // BIRCH_LOG
-        DURATION("Duration"); // 30m
+    public String getParameterPermission() {
+        return parameterPermission;
+    }
 
-        private final String prettyParameterName;
+    public static class DataType {
+        private final Class<?> clazz;
 
-        DataType(String prettyParameterName) {
-            this.prettyParameterName = prettyParameterName;
+        public DataType(Class<?> clazz) {
+            this.clazz = clazz;
         }
 
-        public String getPrettyParameterName() {
-            return prettyParameterName;
+        public Class<?> getClazz() {
+            return clazz;
         }
     }
 
-    public CommandParameterType(DataType dataType, String hoverMessage, boolean isTrailingParameter, String parameterName, String parameterPermission) {
+    public CommandParameterType(Class<?> dataType, String hoverMessage, boolean isTrailingParameter, String parameterName, String parameterPermission) {
         this.parameterName = parameterName;
         this.isTrailingParameter = isTrailingParameter;
         this.dataType = dataType;
@@ -36,12 +36,12 @@ public class CommandParameterType {
         this.parameterPermission = parameterPermission;
     }
 
-    public CommandParameterType(DataType dataType, String hoverMessage, boolean isTrailingParameter, String parameterName) {
+    public CommandParameterType(Class<?> dataType, String hoverMessage, boolean isTrailingParameter, String parameterName) {
         this.parameterName = parameterName;
         this.isTrailingParameter = isTrailingParameter;
         this.dataType = dataType;
         this.hoverMessage = hoverMessage;
-        this.parameterPermission = null;
+        this.parameterPermission = "";
     }
 
     public CommandParameterType(Builder builder) {
@@ -52,8 +52,8 @@ public class CommandParameterType {
         this.parameterPermission = builder.parameterPermission;
     }
 
-    public boolean canViewParameter(Player player) {
-        if (parameterPermission == null) return true;
+    public boolean canViewParameterType(Player player) {
+        if (Objects.equals(parameterPermission, "")) return true;
         return (player.hasPermission(parameterPermission));
     }
 
@@ -65,7 +65,7 @@ public class CommandParameterType {
         return isTrailingParameter;
     }
 
-    public DataType getDataType() {
+    public Class<?> getDataType() {
         return dataType;
     }
 
@@ -74,26 +74,26 @@ public class CommandParameterType {
     }
 
     public static class Builder {
-        private String parameterName; // <parameterName>
-        private boolean isTrailingParameter; // <parameterName...>
-        private DataType dataType; // String
-        private String hoverMessage; // "Hello"
-        private String parameterPermission;
+        protected String parameterName; // <parameterName>
+        protected boolean isTrailingParameter; // <parameterName...>
+        protected Class<?> dataType; // String
+        protected String hoverMessage; // "Hello"
+        protected String parameterPermission;
 
         public Builder() {
-            this.parameterName = null;
+            this.parameterName = "";
             this.isTrailingParameter = false;
-            this.dataType = DataType.STRING;
-            this.hoverMessage = null;
-            this.parameterPermission = null;
+            this.dataType = String.class;
+            this.hoverMessage = "";
+            this.parameterPermission = "";
         }
 
         public Builder(String name) {
             this.parameterName = name;
             this.isTrailingParameter = false;
-            this.dataType = DataType.STRING;
-            this.hoverMessage = null;
-            this.parameterPermission = null;
+            this.dataType = String.class;
+            this.hoverMessage = "";
+            this.parameterPermission = "";
         }
 
         public Builder setParameterName(String parameterName) {
@@ -106,7 +106,7 @@ public class CommandParameterType {
             return this;
         }
 
-        public Builder setDataType(DataType type) {
+        public Builder setDataType(Class<?> type) {
             this.dataType = type;
             return this;
         }
@@ -125,5 +125,4 @@ public class CommandParameterType {
             return new CommandParameterType(this);
         }
     }
-
 }
