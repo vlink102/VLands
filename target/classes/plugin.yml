@@ -1,5 +1,5 @@
 name: VLands
-version: '1.2.5'
+version: '1.2.9'
 main: me.vlink102.vlands.network.VLands
 api-version: '1.20'
 load: POSTWORLD

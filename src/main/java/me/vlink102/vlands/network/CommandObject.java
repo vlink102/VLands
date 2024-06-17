@@ -83,6 +83,11 @@ public class CommandObject {
             return this;
         }
 
+        public Builder addParameter(CommandParameter.Builder parameter) {
+            this.parameters.add(parameter.build());
+            return this;
+        }
+
         public Builder removeParameter(int index) {
             this.parameters.remove(index);
             return this;

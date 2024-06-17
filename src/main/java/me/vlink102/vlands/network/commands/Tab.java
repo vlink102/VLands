@@ -10,8 +10,8 @@ public class Tab extends Command {
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("reload").build()
-                            ).build()
+                                    new CommandParameterType.Builder("reload")
+                            )
             )
             .setDescription("Reloads plugin and config")
             .build();
@@ -20,31 +20,31 @@ public class Tab extends Command {
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("group").build()
+                                    new CommandParameterType.Builder("group")
                             ).addParameterType(
-                                    new CommandParameterType.Builder("player").build()
-                            ).build()
+                                    new CommandParameterType.Builder("player")
+                            )
             )
             .addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("name").build()
-                            ).build()
+                                    new CommandParameterType.Builder("name")
+                            )
             ).addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("property").build()
-                            ).build()
+                                    new CommandParameterType.Builder("property")
+                            )
             ).addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
                                     new CommandParameterType.Builder("values")
                                             .setTrailing(true)
-                                            .build()
-                            ).build()
+                                            
+                            )
             )
             .setDescription("Modifies the specified property of the target")
             .build();
@@ -54,10 +54,10 @@ public class Tab extends Command {
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("group").build()
+                                    new CommandParameterType.Builder("group")
                             ).addParameterType(
-                                    new CommandParameterType.Builder("player").build()
-                            ).build()
+                                    new CommandParameterType.Builder("player")
+                            )
             ).setDescription("Lists the available properties")
             .build();
 
@@ -66,16 +66,16 @@ public class Tab extends Command {
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("nametag").build()
-                            ).build()
+                                    new CommandParameterType.Builder("nametag")
+                            )
             )
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("preview").build()
-                            ).build()
+                                    new CommandParameterType.Builder("preview")
+                            )
             ).setDescription("Shows your nametag for yourself")
-            .build();
+            ;
 
      */
 
@@ -83,21 +83,21 @@ public class Tab extends Command {
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("announce").build()
-                            ).build()
+                                    new CommandParameterType.Builder("announce")
+                            )
             )
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("bar").build()
-                            ).build()
+                                    new CommandParameterType.Builder("bar")
+                            )
             )
             .addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("name").build()
-                            ).build()
+                                    new CommandParameterType.Builder("name")
+                            )
             )
             .addParameter(
                     new CommandParameter.Builder()
@@ -105,8 +105,8 @@ public class Tab extends Command {
                             .addParameterType(
                                     new CommandParameterType.Builder("seconds")
                                             .setDataType(Integer.class)
-                                            .build()
-                            ).build()
+                                            
+                            )
             )
             .setDescription("Temporarily display bossbar for all players")
             .build();
@@ -114,20 +114,20 @@ public class Tab extends Command {
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("parse").build()
-                            ).build()
+                                    new CommandParameterType.Builder("parse")
+                            )
             ).addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("target").build()
-                            ).build()
+                                    new CommandParameterType.Builder("target")
+                            )
             ).addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("string").build()
-                            ).build()
+                                    new CommandParameterType.Builder("string")
+                            )
             )
             .setDescription("Parse a string")
             .build();
@@ -136,14 +136,14 @@ public class Tab extends Command {
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("debug").build()
-                            ).build()
+                                    new CommandParameterType.Builder("debug")
+                            )
             ).addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.OPTIONAL)
                             .addParameterType(
-                                    new CommandParameterType.Builder("player").build()
-                            ).build()
+                                    new CommandParameterType.Builder("player")
+                            )
             )
             .setDescription("Display debug information about a player")
             .build();
@@ -152,8 +152,8 @@ public class Tab extends Command {
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("cpu").build()
-                            ).build()
+                                    new CommandParameterType.Builder("cpu")
+                            )
             )
             .setDescription("Displays CPU usage of the plugin")
             .build();
@@ -163,23 +163,23 @@ public class Tab extends Command {
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("group").build()
+                                    new CommandParameterType.Builder("group")
                             ).addParameterType(
-                                    new CommandParameterType.Builder("player").build()
-                            ).build()
+                                    new CommandParameterType.Builder("player")
+                            )
             )
             .addParameter(
                     new CommandParameter.Builder()
                             .setType(CommandParameter.Type.REQUIRED)
                             .addParameterType(
-                                    new CommandParameterType.Builder("name").build()
-                            ).build()
+                                    new CommandParameterType.Builder("name")
+                            )
             )
             .addParameter(
                     new CommandParameter.Builder()
                             .addParameterType(
-                                    new CommandParameterType.Builder("remove").build()
-                            ).build()
+                                    new CommandParameterType.Builder("remove")
+                            )
             )
             .setDescription("Clears all data of the target")
             .build();

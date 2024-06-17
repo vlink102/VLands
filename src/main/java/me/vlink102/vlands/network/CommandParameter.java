@@ -72,6 +72,11 @@ public class CommandParameter {
             return this;
         }
 
+        public Builder addParameterType(CommandParameterType.Builder type) {
+            this.paramTypes.add(type.build());
+            return this;
+        }
+
         public Builder setUnitInfo(String unitInfo) {
             this.unitInfo = unitInfo;
             return this;

@@ -82,6 +82,11 @@ public class Command {
 
     public static class Menu {
         public List<TextComponent> generateDirectoryListing(Menu rootDirectory, Menu currentDirectory) {
+            List<Menu> dirs = getDirectory(ID_MAP.get(currentDirectory.ID));
+            List<Integer> dirIDs = new ArrayList<>();
+            for (Menu dir : dirs) {
+                dirIDs.add(dir.ID);
+            }
             List<TextComponent> components = new ArrayList<>();
             components.add(Component.text(""));
             components.add(Component.text(" \uD83D\uDCE6 ")
@@ -89,25 +94,45 @@ public class Command {
                     .append(Component.text(rootDirectory.link.getTitle())
                             .color(NamedTextColor.GRAY))
                     .decoration(TextDecoration.ITALIC, false));
+            int index = 0;
+            for (int i = 0; i < rootDirectory.subTopics.size(); i++) {
+                if (dirIDs.contains(rootDirectory.subTopics.get(i).ID)) {
+                    index = i;
+                    break;
+                }
+            }
             for (int i = 0; i < rootDirectory.subTopics.size(); i++) {
                 Menu subTopic = rootDirectory.subTopics.get(i);
-                boolean isSame = currentDirectory.ID == subTopic.ID;
+                boolean isSame = dirIDs.contains(subTopic.ID);
                 if (i + 1 == rootDirectory.subTopics.size()) {
                     components.add(Component.text(" └─ ")
-                            .color(NamedTextColor.GRAY)
-                            .append(Component.text("\uD83D\uDCC2 ")
-                                    .color(NamedTextColor.YELLOW))
-                            .append(Component.text(subTopic.link.getTitle())
-                                    .color(isSame ? NamedTextColor.AQUA : NamedTextColor.GRAY))
-                            .decoration(TextDecoration.ITALIC, false));
-                } else {
-                    components.add(Component.text(" ├─ ")
                             .color(isSame ? NamedTextColor.DARK_AQUA : NamedTextColor.GRAY)
                             .append(Component.text("\uD83D\uDCC2 ")
                                     .color(NamedTextColor.YELLOW))
                             .append(Component.text(subTopic.link.getTitle())
                                     .color(isSame ? NamedTextColor.AQUA : NamedTextColor.GRAY))
                             .decoration(TextDecoration.ITALIC, false));
+                } else {
+                    if (i < index) {
+                        components.add(Component.text(" ├")
+                                .color(NamedTextColor.DARK_AQUA)
+                                .append(Component.text("─ ")
+                                        .color(NamedTextColor.GRAY))
+                                .append(Component.text("\uD83D\uDCC2 ")
+                                        .color(NamedTextColor.YELLOW))
+                                .append(Component.text(subTopic.link.getTitle())
+                                        .color(isSame ? NamedTextColor.AQUA : NamedTextColor.GRAY))
+                                .decoration(TextDecoration.ITALIC, false));
+                    } else {
+                        components.add(Component.text(" ├─ ")
+                                .color(isSame ? NamedTextColor.DARK_AQUA : NamedTextColor.GRAY)
+                                .append(Component.text("\uD83D\uDCC2 ")
+                                        .color(NamedTextColor.YELLOW))
+                                .append(Component.text(subTopic.link.getTitle())
+                                        .color(isSame ? NamedTextColor.AQUA : NamedTextColor.GRAY))
+                                .decoration(TextDecoration.ITALIC, false));
+                    }
+
                 }
             }
             components.add(Component.text(""));
@@ -160,7 +185,7 @@ public class Command {
                 }
                 current = current.subTopics.get(indexes[i]);
             }
-            return VLands.getMenu();
+            return current;
         }
 
         public static List<Menu> getDirectory(Integer... indexes) {

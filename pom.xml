@@ -6,7 +6,7 @@
 
     <groupId>me.vlink102.vlands</groupId>
     <artifactId>network</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.9</version>
     <packaging>jar</packaging>
 
     <name>VLands</name>
